@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { ShoppingCart, Send, MessageCircle, Moon, Sun, Package, Trash2, Edit } from 'lucide-react'
 
-const initialProducts = [
+const products = [
   { id: 1, name: "Ankara Maxi Dress", price: 25000, desc: "100% cotton • Free size • Perfect for owambe" },
   { id: 2, name: "Beaded Auto Gele", price: 15000, desc: "Premium beads • Ready in 10 seconds" },
   { id: 3, name: "Aso-Oke Bride Set", price: 85000, desc: "Full set with blouse & wrapper" },
@@ -17,24 +17,15 @@ export default function App() {
   const addToCart = (product) => {
     setCart(prev => {
       const exists = prev.find(p => p.id === product.id)
-      if (exists) {
-        return prev.map(p => p.id === product.id ? { ...p, qty: p.qty + 1 } : p)
-      }
+      if (exists) return prev.map(p => p.id === product.id ? { ...p, qty: p.qty + 1 } : p)
       return [...prev, { ...product, qty: 1 }]
     })
   }
 
-  const updateQty = (id, change) => {
-    setCart(prev => prev
-      .map(p => p.id === id ? { ...p, qty: Math.max(1, p.qty + change) } : p)
-      .filter(p => p.qty > 0)
-    )
-  }
-
-  const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0, 0)
+  const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0)
 
   const whatsappMessage = cart.length > 0
-    ? `Hello Chioma! I'd like to order:\n\n${cart.map(i => `${i.qty}× ${i.name}\n   ₦${(i.price * i.qty).toLocaleString()}`).join('\n')}\n\n*Total: ₦${total.toLocaleString()}*\n\nPlease send payment details. Thank you!`
+    ? `Hello! I'd like to order:\n\n${cart.map(i => `${i.qty}× ${i.name}\n   ₦${(i.price * i.qty).toLocaleString()}`).join('\n')}\n\n*Total: ₦${total.toLocaleString()}*\n\nPlease send payment details. Thank you!`
     : ''
 
   const whatsappLink = `https://wa.me/2349012345678?text=${encodeURIComponent(whatsappMessage)}`
@@ -46,16 +37,12 @@ export default function App() {
         <div className="max-w-6xl mx-auto">
           <div className="flex justify-between items-center mb-12">
             <h1 className="text-5xl font-bold">Admin Dashboard</h1>
-            <button
-              onClick={() => setIsAdmin(false)}
-              className="bg-red-600 hover:bg-red-700 text-white px-8 py-4 rounded-2xl text-xl font-bold"
-            >
+            <button onClick={() => setIsAdmin(false)} className="bg-red-600 hover:bg-red-700 text-white px-8 py-4 rounded-2xl text-xl font-bold">
               Exit Admin
             </button>
           </div>
-
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {initialProducts.map(p => (
+            {products.map(p => (
               <div key={p.id} className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl overflow-hidden">
                 <div className="bg-gray-200 border-2 border-dashed h-80 w-full" />
                 <div className="p-8">
@@ -73,8 +60,7 @@ export default function App() {
                 </div>
               </div>
             ))}
-
-            <button className="bg-linear-to-br from-green-500 to-teal-600 text-white rounded-3xl p-16 shadow-2xl hover:scale-105 transition-all flex flex-col items-center justify-center text-2xl font-bold">
+            <button className="bg-gradient-to-br from-green-500 to-teal-600 text-white rounded-3xl p-16 shadow-2xl hover:scale-105 transition-all flex flex-col items-center justify-center text-2xl font-bold">
               <Package className="w-24 h-24 mb-6" />
               Add New Product
             </button>
@@ -84,14 +70,14 @@ export default function App() {
     )
   }
 
-  // CUSTOMER VIEW — WhatsApp Style
+  // CUSTOMER VIEW — DARK MODE FIXED
   return (
-    <div className={darkMode ? 'dark' : ''}>
-      <div className="min-h-screen bg-linear-to-br from-green-50 to-teal-50 dark:from-gray-900 dark:to-black">
+    <div className={`min-h-screen ${darkMode ? 'dark' : ''}`}>
+      <div className="min-h-screen bg-gradient-to-br from-green-50 to-teal-50 dark:bg-gray-900">
         <div className="max-w-md mx-auto bg-white dark:bg-gray-900 min-h-screen flex flex-col">
 
           {/* WhatsApp Header */}
-          <div className="bg-linear-to-r from-green-600 to-teal-600 text-white p-6 shadow-2xl sticky top-0 z-50">
+          <div className="bg-gradient-to-r from-green-600 to-teal-600 text-white p-6 shadow-2xl sticky top-0 z-50">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <MessageCircle className="w-14 h-14" />
@@ -108,15 +94,15 @@ export default function App() {
 
           {/* Welcome */}
           <div className="p-6">
-            <div className="bg-linear-to-r from-green-100 to-teal-100 dark:from-gray-800 dark:to-gray-700 rounded-3xl p-8 text-center shadow-xl">
-              <p className="text-3xl font-bold mb-3">Welcome! 👋</p>
+            <div className="bg-gradient-to-r from-green-100 to-teal-100 dark:from-gray-800 dark:to-gray-700 rounded-3xl p-8 text-center shadow-xl">
+              <p className="text-3xl font-bold mb-3">Welcome!</p>
               <p className="text-xl opacity-80">Browse our exclusive collection</p>
             </div>
           </div>
 
           {/* Products */}
           <div className="px-6 space-y-10 pb-40">
-            {initialProducts.map(product => (
+            {products.map(product => (
               <div key={product.id} className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl overflow-hidden">
                 <div className="bg-gray-200 border-2 border-dashed h-96 w-full" />
                 <div className="p-8">
@@ -126,7 +112,7 @@ export default function App() {
                     <span className="text-4xl font-bold text-green-600">₦{product.price.toLocaleString()}</span>
                     <button
                       onClick={() => addToCart(product)}
-                      className="bg-linear-to-r from-green-600 to-teal-600 hover:from-green-700 hover:to-teal-700 text-white px-10 py-5 rounded-full text-2xl font-bold shadow-xl transition"
+                      className="bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-700 hover:to-teal-700 text-white px-10 py-5 rounded-full text-2xl font-bold shadow-xl"
                     >
                       Add to Cart
                     </button>
@@ -147,12 +133,11 @@ export default function App() {
                   </div>
                   <span className="text-4xl font-bold text-green-600">₦{total.toLocaleString()}</span>
                 </div>
-
                 <a
                   href={whatsappLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full bg-green-600 hover:bg-green-700 text-white text-center py-6 rounded-3xl text-2xl font-bold shadow-2xl flex items-center justify-center gap-4 transition"
+                  className="block w-full bg-green-600 hover:bg-green-700 text-white text-center py-6 rounded-3xl text-2xl font-bold shadow-2xl flex items-center justify-center gap-4"
                 >
                   <Send className="w-10 h-10" />
                   Complete Order on WhatsApp

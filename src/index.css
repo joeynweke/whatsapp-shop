@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-/* Ensure dark mode is applied to html element */
+/* THIS LINE IS THE FIX — forces dark mode on <html> */
 html.dark {
   color-scheme: dark;
 }
